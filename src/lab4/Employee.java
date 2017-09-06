@@ -34,6 +34,7 @@ import java.util.Date;
  * @version     1.02
  */
 public class Employee {
+
     private String firstName;
     private String lastName;
     private String ssn;
