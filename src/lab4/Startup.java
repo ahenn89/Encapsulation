@@ -11,11 +11,13 @@ package lab4;
  */
 import java.util.Date;
 
-public class EmployeeReportService {
-    
-    public void doOutput(String msg){
-        System.out.println(msg);
-    }
+public class Startup {
+    public static void main(String[] args) {
+        
+        Company company = new Company();
+        
+        company.hireEmployee("Peter", "Piper", "333-33-3333");
+    }    
 
 //    private Employee employee;
 //

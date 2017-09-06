@@ -4,32 +4,29 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * In this lab focus on CLASS Encapsulation and  the Single Responsibility 
- * Principle (SRP) and fix/add code as necessary.
+ * As with the previous lab you should focus on CLASS Encapsulation and the 
+ * Single Responsibility Principle (SRP). However what makes this lab DIFFERENT
+ * is that in a real program you would need more than just an Employee class 
+ * and a EmployeeResportService class. Remember what you learned about OOA/D and 
+ * finding the Conceptual Objects in the Problem Domain.
  * 
  * Pay special attention to the following issues:
- *    1. It is not the job of this class or any of the methods in this class
- *       to do output. So you must remove the System.out.println statements.
- *       But we still need output. What to do? Delegate that work to a new
- *       object that IS responsible for output. Create a report service class
- *       and have the employee object talk to that object to perform the output.
- *       Using a separate class inside another like this is a form of class
- *       encapsulation -- hiding a class within another class.
- *       Notice how you can easily change the way output is done, going from
- *       console output to JOptionPane output if desired without the Employee
- *       object knowing about the change. Flexible!
+ *    1. You will need additional classes to simulate the real world. To keep
+ *       things simple you should think about adding two more classes. Think
+ *       about how employees are hired, who does the hiring and who do those
+ *       people work for. Think about the Nouns used in business with respect
+ *       to hiring employees and commanding them to go through orientation.
  * 
- *    2. When doing method validation we have a similar problem. It is not the
- *       job of this class or any of its methods to do output. But error
- *       messages aren't a reporting issue. Error messages can be produced
- *       from invalid data in any program, whether or not those programs have
- *       reporting services. So we need a different approach. The right thing
- *       to do is to create an exception that notifies the user that a 
- *       validation error has happened. An example of this is provided in the
- *       setFirstName() method. Mimic this behavior in other setter methods.
- *       Note: a thorough discussion of Exceptions and how to use them is
- *       a future topic of this course. But those details are beyond the
- *       scope of this lesson.
+ *    2. When adding these classes think about the Single Responsibility 
+ *       Principle and Class Encapsulation -- hiding classes inside other
+ *       classes, similar to what you did with the report service which was
+ *       hidden inside the Employee class.
+ * 
+ *    3. For those who struggle with this final lab a solution is provided.
+ *       However, you should not look at the solution unless absolutely 
+ *       necessary if you are stuck. Try to do as much of this lab on your 
+ *       own by doing critical thinking about the classes you need and the 
+ *       responsibilities you are giving each class.
  * 
  * Review the tips in the document "EncapCheckList.pdf" if needed.
  *
@@ -46,7 +43,7 @@ public class Employee {
     private boolean movedIn;
     private String cubeId;
     private Date orientationDate;
-    private EmployeeReportService employeeReportService;
+    private EmployeeReportService reportService;
 
     public Employee(String firstName, String lastName, String ssn) {
         // Using setter method guarantees validation will be performed
@@ -90,7 +87,7 @@ public class Employee {
     // and should only be called as part of the larger task of:
     private void meetWithHrForBenefitAndSalryInfo() {
         metWithHr = true;
-        employeeReportService.doOutput(firstName + " " + lastName + " met with Hr on "
+        reportService.doOutput(firstName + " " + lastName + " met with Hr on "
             + getFormattedDate());
     }
 
@@ -101,7 +98,7 @@ public class Employee {
     // doFirtTimeOrientation()
     private void meetDepartmentStaff() {
         metDeptStaff = true;
-        employeeReportService.doOutput(firstName + " " + lastName + " met with Dept. Staff on "
+        reportService.doOutput(firstName + " " + lastName + " met with Dept. Staff on "
             + getFormattedDate());
     }
 
@@ -110,7 +107,7 @@ public class Employee {
     // independently from other classes.
     public void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        employeeReportService.doOutput(firstName + " " + lastName + " reviewed Dept policies on "
+        reportService.doOutput(firstName + " " + lastName + " reviewed Dept policies on "
             + getFormattedDate());
     }
 
@@ -120,7 +117,7 @@ public class Employee {
     public void moveIntoCubicle(String cubeId) {
         this.cubeId = cubeId;
         this.movedIn = true;
-        employeeReportService.doOutput(firstName + " " + lastName + " moved into cubicle "
+        reportService.doOutput(firstName + " " + lastName + " moved into cubicle "
                 + cubeId + " on " + getFormattedDate());
     }
 
@@ -216,5 +213,13 @@ public class Employee {
             System.out.println("orientationDate is required");
         }
         this.orientationDate = orientationDate;
+    }
+    
+    public EmployeeReportService getReportService() {
+        return reportService;
+    }
+
+    public void setReportService(EmployeeReportService reportService) {
+        this.reportService = reportService;
     }
 }
