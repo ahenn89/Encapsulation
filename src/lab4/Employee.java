@@ -34,7 +34,9 @@ import java.util.Date;
  * @version     1.02
  */
 public class Employee {
-
+    private final String REQUIRED_MSG = " is mandatory ";
+    private final String CRLF = "\n";
+    
     private String firstName;
     private String lastName;
     private String ssn;
