@@ -46,7 +46,7 @@ public class Employee {
     private boolean movedIn;
     private String cubeId;
     private Date orientationDate;
-    private OutputService output;
+    private ReportService reportService;
 
     public Employee(String firstName, String lastName, String ssn) {
         // Using setter method guarantees validation will be performed
@@ -54,7 +54,6 @@ public class Employee {
         setFirstName(firstName);
         setLastName(lastName);
         setSsn(ssn);
-        output = new OutputService();
     }
     
     /* 
@@ -91,7 +90,7 @@ public class Employee {
     // and should only be called as part of the larger task of:
     private void meetWithHrForBenefitAndSalryInfo() {
         metWithHr = true;
-        output.simpleOutput(firstName + " " + lastName + " met with Hr on "
+        reportService.doOutput(firstName + " " + lastName + " met with Hr on "
             + getFormattedDate());
     }
 
@@ -102,7 +101,7 @@ public class Employee {
     // doFirtTimeOrientation()
     private void meetDepartmentStaff() {
         metDeptStaff = true;
-        System.out.println(firstName + " " + lastName + " met with Dept. Staff on "
+        reportService.doOutput(firstName + " " + lastName + " met with Dept. Staff on "
             + getFormattedDate());
     }
 
@@ -111,7 +110,7 @@ public class Employee {
     // independently from other classes.
     public void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        System.out.println(firstName + " " + lastName + " reviewed Dept policies on "
+        reportService.doOutput(firstName + " " + lastName + " reviewed Dept policies on "
             + getFormattedDate());
     }
 
@@ -121,7 +120,7 @@ public class Employee {
     public void moveIntoCubicle(String cubeId) {
         this.cubeId = cubeId;
         this.movedIn = true;
-        System.out.println(firstName + " " + lastName + " moved into cubicle "
+        reportService.doOutput(firstName + " " + lastName + " moved into cubicle "
                 + cubeId + " on " + getFormattedDate());
     }
 
