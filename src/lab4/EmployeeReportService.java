@@ -11,19 +11,39 @@ package lab4;
  * @author      Jim Lombardo, WCTC Instructor
  * @version     1.02
  */
+import java.util.Date;
+
+
 public class EmployeeReportService {
-    private String report = "";
     
-    public void addData(String data) {
-        report += data;
+    public void doOutput(String msg){
+        System.out.println(msg);
     }
-    
-    public void outputReport() {
-        System.out.println(report);
-    }
-    
-    public void clearReport() {
-        report = "";
-    }
+
+//    private Employee employee;
+//
+//    public ReportService(Employee employee) {
+//        this.employee = employee;
+//    }
+//
+//    public void reportMetWithHr(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " met with Hr on "
+//                + formattedDate);
+//    }
+//
+//    public void reportMetWithDepartmentStaff(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " met with Dept. Staff on "
+//                + formattedDate);
+//    }
+//
+//    public void reportReviewedDeptPolicies(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " reviewed Dept policies on "
+//                + formattedDate);
+//    }
+//
+//    public void reportMovedIntoCubicle(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " moved into cubicle "
+//                + employee.getCubeId()+ " on " + formattedDate);
+//    }
 
 }

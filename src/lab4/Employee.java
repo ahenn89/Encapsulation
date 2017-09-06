@@ -4,29 +4,32 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * As with the previous lab you should focus on CLASS Encapsulation and the 
- * Single Responsibility Principle (SRP). However what makes this lab DIFFERENT
- * is that in a real program you would need more than just an Employee class 
- * and a EmployeeResportService class. Remember what you learned about OOA/D and 
- * finding the Conceptual Objects in the Problem Domain.
+ * In this lab focus on CLASS Encapsulation and  the Single Responsibility 
+ * Principle (SRP) and fix/add code as necessary.
  * 
  * Pay special attention to the following issues:
- *    1. You will need additional classes to simulate the real world. To keep
- *       things simple you should think about adding two more classes. Think
- *       about how employees are hired, who does the hiring and who do those
- *       people work for. Think about the Nouns used in business with respect
- *       to hiring employees and commanding them to go through orientation.
+ *    1. It is not the job of this class or any of the methods in this class
+ *       to do output. So you must remove the System.out.println statements.
+ *       But we still need output. What to do? Delegate that work to a new
+ *       object that IS responsible for output. Create a report service class
+ *       and have the employee object talk to that object to perform the output.
+ *       Using a separate class inside another like this is a form of class
+ *       encapsulation -- hiding a class within another class.
+ *       Notice how you can easily change the way output is done, going from
+ *       console output to JOptionPane output if desired without the Employee
+ *       object knowing about the change. Flexible!
  * 
- *    2. When adding these classes think about the Single Responsibility 
- *       Principle and Class Encapsulation -- hiding classes inside other
- *       classes, similar to what you did with the report service which was
- *       hidden inside the Employee class.
- * 
- *    3. For those who struggle with this final lab a solution is provided.
- *       However, you should not look at the solution unless absolutely 
- *       necessary if you are stuck. Try to do as much of this lab on your 
- *       own by doing critical thinking about the classes you need and the 
- *       responsibilities you are giving each class.
+ *    2. When doing method validation we have a similar problem. It is not the
+ *       job of this class or any of its methods to do output. But error
+ *       messages aren't a reporting issue. Error messages can be produced
+ *       from invalid data in any program, whether or not those programs have
+ *       reporting services. So we need a different approach. The right thing
+ *       to do is to create an exception that notifies the user that a 
+ *       validation error has happened. An example of this is provided in the
+ *       setFirstName() method. Mimic this behavior in other setter methods.
+ *       Note: a thorough discussion of Exceptions and how to use them is
+ *       a future topic of this course. But those details are beyond the
+ *       scope of this lesson.
  * 
  * Review the tips in the document "EncapCheckList.pdf" if needed.
  *
@@ -34,12 +37,6 @@ import java.util.Date;
  * @version     1.02
  */
 public class Employee {
-    // Use constants for numbers or Strings that are repeated 
-    // (all are called 'magic numbers', which are evil). This makes editing
-    // these values easier -- one place to do it.
-    private final String REQUIRED_MSG = " is mandatory ";
-    private final String CRLF = "\n"; // carriage return line feed
-    
     private String firstName;
     private String lastName;
     private String ssn;
@@ -49,19 +46,14 @@ public class Employee {
     private boolean movedIn;
     private String cubeId;
     private Date orientationDate;
-    private EmployeeReportService reportService;
+    private EmployeeReportService employeeReportService;
 
-    /*
-        Notice we force certain mandatory properties by using a custom
-        constructor. But we use the setter method to peform validation.
-    */
     public Employee(String firstName, String lastName, String ssn) {
         // Using setter method guarantees validation will be performed
         // Ignore the warning messages for now. Will be explained later
         setFirstName(firstName);
         setLastName(lastName);
         setSsn(ssn);
-        reportService = new EmployeeReportService();
     }
     
     /* 
@@ -88,7 +80,7 @@ public class Employee {
         reviewDeptPolicies();
         moveIntoCubicle(cubeId);
     }
-    
+
     // The following methods may be public or private, depending on whether
     // they need to be called from other classes independently.
 
@@ -96,11 +88,10 @@ public class Employee {
     // would only do this once, upon being hired. If that were true, this
     // method should not be public. It should only be available to this class
     // and should only be called as part of the larger task of:
-    // doFirtTimeOrientation()
     private void meetWithHrForBenefitAndSalryInfo() {
         metWithHr = true;
-        reportService.addData(firstName + " " + lastName + " met with Hr on "
-            + getFormattedDate() + CRLF);
+        employeeReportService.doOutput(firstName + " " + lastName + " met with Hr on "
+            + getFormattedDate());
     }
 
     // Assume this must be performed first, and assume that an employee
@@ -110,8 +101,8 @@ public class Employee {
     // doFirtTimeOrientation()
     private void meetDepartmentStaff() {
         metDeptStaff = true;
-        reportService.addData(firstName + " " + lastName + " met with Dept. Staff on "
-            + getFormattedDate() + CRLF);
+        employeeReportService.doOutput(firstName + " " + lastName + " met with Dept. Staff on "
+            + getFormattedDate());
     }
 
     // Assume this must be performed third. And assume that because department
@@ -119,8 +110,8 @@ public class Employee {
     // independently from other classes.
     public void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        reportService.addData(firstName + " " + lastName + " reviewed Dept policies on "
-            + getFormattedDate() + CRLF);
+        employeeReportService.doOutput(firstName + " " + lastName + " reviewed Dept policies on "
+            + getFormattedDate());
     }
 
     // Assume this must be performed 4th. And assume that because employees
@@ -129,8 +120,8 @@ public class Employee {
     public void moveIntoCubicle(String cubeId) {
         this.cubeId = cubeId;
         this.movedIn = true;
-        reportService.addData(firstName + " " + lastName + " moved into cubicle "
-                + cubeId + " on " + getFormattedDate() + CRLF);
+        employeeReportService.doOutput(firstName + " " + lastName + " moved into cubicle "
+                + cubeId + " on " + getFormattedDate());
     }
 
     public String getFirstName() {
@@ -143,7 +134,7 @@ public class Employee {
     // to display an error message -- not the job of this class!
     public void setFirstName(String firstName) {
         if(firstName == null || firstName.isEmpty()) {
-            throw new IllegalArgumentException("first name" + REQUIRED_MSG);
+            throw new IllegalArgumentException("first name is required");
         }
         this.firstName = firstName;
     }
@@ -154,7 +145,7 @@ public class Employee {
 
     public void setLastName(String lastName) {
         if(lastName == null || lastName.isEmpty()) {
-            throw new IllegalArgumentException("last name" + REQUIRED_MSG);
+            System.out.println("last name is required");
         }
         this.lastName = lastName;
     }
@@ -165,8 +156,8 @@ public class Employee {
 
     public void setSsn(String ssn) {
         if(ssn == null || ssn.length() < 9 || ssn.length() > 11) {
-            throw new IllegalArgumentException("ssn"  + REQUIRED_MSG 
-                    + "and must be between 9 and 11 characters (if hyphens are used)");
+            System.out.println("ssn is required and must be "
+                    + "between 9 and 11 characters (if hyphens are used)");
         }
         this.ssn = ssn;
     }
@@ -211,7 +202,7 @@ public class Employee {
     
     public void setCubeId(String cubeId) {
         if(cubeId == null || cubeId.isEmpty()) {
-            throw new IllegalArgumentException("cube id" + REQUIRED_MSG);
+            System.out.println("cube id is required");
         }
         this.cubeId = cubeId;
     }
@@ -222,18 +213,8 @@ public class Employee {
 
     public void setOrientationDate(Date orientationDate) {
         if(orientationDate == null) {
-            throw new IllegalArgumentException("orientationDate" + REQUIRED_MSG);
+            System.out.println("orientationDate is required");
         }
         this.orientationDate = orientationDate;
     }
-
-    public EmployeeReportService getReportService() {
-        return reportService;
-    }
-
-    public void setReportService(EmployeeReportService reportService) {
-        this.reportService = reportService;
-    }
-    
 }
-

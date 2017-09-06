@@ -9,14 +9,38 @@ package lab4;
  * @author      Jim Lombardo, WCTC Instructor
  * @version     1.02
  */
-public class Startup {
-    public static void main(String[] args) {
+import java.util.Date;
 
-        Employee employee = new Employee("Peter","Piper","333-33-3333");
-        
-        employee.doFirstTimeOrientation("A101");
-        employee.getReportService().outputReport();
+public class EmployeeReportService {
+    
+    public void doOutput(String msg){
+        System.out.println(msg);
     }
-    
-    
+
+//    private Employee employee;
+//
+//    public ReportService(Employee employee) {
+//        this.employee = employee;
+//    }
+//
+//    public void reportMetWithHr(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " met with Hr on "
+//                + formattedDate);
+//    }
+//
+//    public void reportMetWithDepartmentStaff(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " met with Dept. Staff on "
+//                + formattedDate);
+//    }
+//
+//    public void reportReviewedDeptPolicies(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " reviewed Dept policies on "
+//                + formattedDate);
+//    }
+//
+//    public void reportMovedIntoCubicle(String formattedDate) {
+//        System.out.println(employee.getFirstName() + " " + employee.getLastName() + " moved into cubicle "
+//                + employee.getCubeId()+ " on " + formattedDate);
+//    }
+
 }
