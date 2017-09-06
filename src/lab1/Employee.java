@@ -1,15 +1,23 @@
 package lab1;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Fix the code in this class to do PROPERTY encapsulation correctly. Also
- * consider if any of the properties should be mandatory and use a 
- * constructor to enforce that. Review the tips in the document 
- * "EncapCheckList.pdf" if needed.
+ * In this lab focus on METHOD encapsulation and fix/add code as necessary. Pay
+ * special attention to the following issues: 
+    * 1. Not all methods need to be public 
+    * 2. When methods need to be called in a certain order you can do this
+    *    by creating a parent method that calls the other, helper methods. 
+    * 3. There is some duplicate code used that violates the D.R.Y. principle. Eliminate that
+    *    by encapsulating the duplicate code in a new method and then call that method
+    *    in place of the duplicate code 
+    * 4. All method parameters should be validated.
  *
- * @author      Jim Lombardo, WCTC Instructor
- * @version     1.02
+ * Review the tips in the document "EncapCheckList.pdf" if needed.
+ *
+ * @author Jim Lombardo, WCTC Instructor
+ * @version 1.02
  */
 public class Employee {
 
@@ -23,137 +31,157 @@ public class Employee {
     private String cubeId;
     private Date orientationDate;
 
-    /**
-     * @return the firstName
-     */
+    //can use setters that already have valdiation, but will result in warnings. 
+    //more on the warnings later and how to deal with them. 
+    public Employee(String firstName, String lastName, String ssn) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.ssn = ssn;
+    }
+
+    public String returnFormattedDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+        String fmtDate = sdf.format(orientationDate);
+        return fmtDate;
+    }
+
+    // Assume this must be performed first, and assume that an employee
+    // would only do this once, upon being hired.
+    private void meetWithHrForBenefitAndSalaryInfo() {
+        metWithHr = true;
+        System.out.println(firstName + " " + lastName + " met with Hr on "
+                + this.returnFormattedDate());
+    }
+
+    // Assume this must be performed second, and assume that an employee
+    // would only do this once, upon being hired.:
+    private void meetDepartmentStaff() {
+        metDeptStaff = true;
+        System.out.println(firstName + " " + lastName + " met with Dept. Staff on "
+                + this.returnFormattedDate());
+    }
+
+    // Assume this must be performed third. And assume that because department
+    // policies may change that this method may need to be called 
+    // independently from other classes.
+    public void reviewDeptPolicies() {
+        reviewedDeptPolicies = true;
+        System.out.println(firstName + " " + lastName + " reviewed Dept policies on "
+                + this.returnFormattedDate());
+    }
+
+    // Assume this must be performed 4th. And assume that because employees
+    // sometimes change office locations that this method may need to be called 
+    // independently from other classes.
+    public void moveIntoCubicle(String cubeId) {
+        this.cubeId = cubeId;
+        this.movedIn = true;
+        System.out.println(firstName + " " + lastName + " moved into cubicle "
+                + cubeId + " on " + this.returnFormattedDate());
+    }
+
+    public void processNewHire(String cubeId) {
+        this.meetWithHrForBenefitAndSalaryInfo();
+        this.meetDepartmentStaff();
+        this.reviewDeptPolicies();
+        this.moveIntoCubicle(cubeId);
+    }
+
     public String getFirstName() {
         return firstName;
     }
 
-    /**
-     * @return the lastName
-     */
+    // setter methods give the developer the power to control what data is
+    // allowed through validation.
+    public void setFirstName(String firstName) {
+        if(firstName == null || firstName.length()<2){
+            System.out.println("Error. First Name must be at least 2 characters.");
+        } else {
+            this.firstName = firstName;
+        }
+        
+    }
+
     public String getLastName() {
         return lastName;
     }
 
-    /**
-     * @return the ssn
-     */
+    public void setLastName(String lastName) {
+        if(lastName == null || lastName.length()<2){
+            System.out.println("Error. Last name must be at least 2 characters.");
+        } else {
+            this.lastName = lastName;
+        }
+        
+    }
+
     public String getSsn() {
         return ssn;
     }
 
-    /**
-     * @return the metWithHr
-     */
-    public boolean isMetWithHr() {
-        return metWithHr;
-    }
-
-    /**
-     * @return the metDeptStaff
-     */
-    public boolean isMetDeptStaff() {
-        return metDeptStaff;
-    }
-
-    /**
-     * @return the reviewedDeptPolicies
-     */
-    public boolean isReviewedDeptPolicies() {
-        return reviewedDeptPolicies;
-    }
-
-    /**
-     * @return the movedIn
-     */
-    public boolean isMovedIn() {
-        return movedIn;
-    }
-
-    /**
-     * @return the cubeId
-     */
-    public String getCubeId() {
-        return cubeId;
-    }
-
-    /**
-     * @return the orientationDate
-     */
-    public Date getOrientationDate() {
-        return orientationDate;
-    }
-
-    /**
-     * @param firstName the firstName to set
-     */
-    public void setFirstName(String firstName) {
-        if(firstName == null || firstName.length() < 2){
-            System.out.println("error");
-        }
-        this.firstName = firstName;
-    }
-
-    /**
-     * @param lastName the lastName to set
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    /**
-     * @param ssn the ssn to set
-     */
     public void setSsn(String ssn) {
         if(ssn == null || ssn.length() != 9){
-            System.out.println("Enter a valid SSN. Must be 9 digits.");
-        }else {
+            System.out.println("Enter valid SSN. Must be 9 digits.");
+        } else {
             this.ssn = ssn;
         }
     }
 
-    /**
-     * @param metWithHr the metWithHr to set
-     */
+    public boolean isMetWithHr() {
+        return metWithHr;
+    }
+
+    // boolean parameters need no validation
     public void setMetWithHr(boolean metWithHr) {
         this.metWithHr = metWithHr;
     }
 
-    /**
-     * @param metDeptStaff the metDeptStaff to set
-     */
+    public boolean isMetDeptStaff() {
+        return metDeptStaff;
+    }
+
     public void setMetDeptStaff(boolean metDeptStaff) {
         this.metDeptStaff = metDeptStaff;
     }
 
-    /**
-     * @param reviewedDeptPolicies the reviewedDeptPolicies to set
-     */
+    public boolean isReviewedDeptPolicies() {
+        return reviewedDeptPolicies;
+    }
+
     public void setReviewedDeptPolicies(boolean reviewedDeptPolicies) {
         this.reviewedDeptPolicies = reviewedDeptPolicies;
     }
 
-    /**
-     * @param movedIn the movedIn to set
-     */
+    public boolean isMovedIn() {
+        return movedIn;
+    }
+
     public void setMovedIn(boolean movedIn) {
         this.movedIn = movedIn;
     }
 
-    /**
-     * @param cubeId the cubeId to set
-     */
+    public String getCubeId() {
+        return cubeId;
+    }
+
     public void setCubeId(String cubeId) {
-        this.cubeId = cubeId;
+        if(cubeId == null || cubeId.length() < 3){
+            System.out.println("Error. Invalid Cubical ID");  
+        } else {
+            this.cubeId = cubeId;
+        }  
     }
 
-    /**
-     * @param orientationDate the orientationDate to set
-     */
+    public Date getOrientationDate() {
+        return orientationDate;
+    }
+
     public void setOrientationDate(Date orientationDate) {
-        this.orientationDate = orientationDate;
+        if(orientationDate == null){
+            System.out.println("Error. Please schedule an Orientation Date.");
+        } else {
+             this.orientationDate = orientationDate;
+        }
+       
     }
-
 }
